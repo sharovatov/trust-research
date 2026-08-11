@@ -1,0 +1,1038 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Economy of Trust is an independent research project exploring the hidden cost of low trust in QA and software testing teams." />
+  <meta name="theme-color" content="#f4f1e8" />
+  <meta property="og:title" content="Economy of Trust: Research on trust in QA teams" />
+  <meta property="og:description" content="What does low trust really cost a QA team? Participate in research on trust, coordination, rework, quality and decision-making." />
+  <meta property="og:type" content="website" />
+  <title>Economy of Trust: QA Research</title>
+
+  <style>
+    :root {
+      --bg: #f4f1e8;
+      --surface: #fffdf7;
+      --surface-2: #ece8dc;
+      --ink: #18201d;
+      --muted: #5e6762;
+      --line: #d6d2c7;
+      --accent: #126b60;
+      --accent-dark: #0c4d45;
+      --accent-soft: #dcebe6;
+      --warm: #a9692b;
+      --warm-soft: #efe0cc;
+      --shadow: 0 18px 55px rgba(24, 32, 29, 0.08);
+      --radius: 22px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 2%, rgba(18,107,96,.08), transparent 24rem),
+        radial-gradient(circle at 10% 28%, rgba(169,105,43,.06), transparent 22rem),
+        var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(214,210,199,.82);
+      background: rgba(244,241,232,.90);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 760;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--ink);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      background: var(--ink);
+      opacity: .82;
+    }
+
+    .brand-mark::before { width: 12px; height: 1.5px; }
+    .brand-mark::after { width: 1.5px; height: 12px; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-size: .93rem;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: .96rem;
+      box-shadow: 0 10px 26px rgba(18,107,96,.17);
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      background: var(--accent-dark);
+      box-shadow: 0 14px 30px rgba(18,107,96,.22);
+    }
+
+    .button.secondary {
+      color: var(--ink);
+      background: transparent;
+      border-color: var(--line);
+      box-shadow: none;
+    }
+
+    .button.secondary:hover { background: rgba(255,255,255,.44); }
+
+    .button.small {
+      min-height: 40px;
+      padding-inline: 16px;
+      font-size: .9rem;
+    }
+
+    .hero {
+      padding: 92px 0 72px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(340px, .88fr);
+      align-items: center;
+      gap: clamp(48px, 8vw, 110px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 22px;
+      color: var(--accent-dark);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1.5px;
+      background: currentColor;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 24px;
+      font-size: clamp(3rem, 7vw, 6.4rem);
+      line-height: .96;
+      letter-spacing: -0.068em;
+      font-weight: 760;
+    }
+
+    .hero-copy {
+      max-width: 690px;
+      font-size: clamp(1.08rem, 1.6vw, 1.3rem);
+      color: #36413c;
+      line-height: 1.62;
+    }
+
+    .hero-copy strong { color: var(--ink); }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .hero-meta {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+
+    .hero-meta strong { color: var(--ink); }
+
+    .research-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: rgba(255,253,247,.8);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .research-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -70px -90px auto;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+    }
+
+    .card-kicker {
+      position: relative;
+      z-index: 1;
+      font-size: .77rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .trust-visual {
+      position: relative;
+      height: 300px;
+      margin: 28px 0 10px;
+    }
+
+    .node {
+      position: absolute;
+      width: 98px;
+      height: 98px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: .79rem;
+      font-weight: 750;
+      line-height: 1.15;
+      box-shadow: 0 12px 30px rgba(24,32,29,.06);
+      z-index: 2;
+    }
+
+    .node.qa { left: 50%; top: 50%; transform: translate(-50%,-50%); background: var(--accent); color: #fff; border-color: var(--accent); }
+    .node.dev { left: 3%; top: 6%; }
+    .node.product { right: 4%; top: 4%; }
+    .node.process { left: 2%; bottom: 2%; }
+    .node.ai { right: 1%; bottom: 4%; }
+
+    .connector {
+      position: absolute;
+      height: 1px;
+      background: #b9b5aa;
+      transform-origin: left center;
+      z-index: 1;
+    }
+
+    .c1 { left: 24%; top: 31%; width: 31%; transform: rotate(24deg); }
+    .c2 { left: 52%; top: 35%; width: 31%; transform: rotate(-22deg); }
+    .c3 { left: 23%; top: 72%; width: 31%; transform: rotate(-23deg); }
+    .c4 { left: 52%; top: 65%; width: 32%; transform: rotate(24deg); }
+
+    .trust-caption {
+      position: relative;
+      z-index: 2;
+      max-width: 320px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .trust-caption strong { color: var(--ink); }
+
+    .section {
+      padding: 94px 0;
+      border-top: 1px solid rgba(214,210,199,.78);
+    }
+
+    .section.alt {
+      background: rgba(255,253,247,.47);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: .72fr 1.28fr;
+      gap: 60px;
+      margin-bottom: 54px;
+    }
+
+    .section-label {
+      color: var(--accent-dark);
+      font-size: .76rem;
+      font-weight: 820;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      font-size: clamp(2.1rem, 4.5vw, 4rem);
+      line-height: 1.04;
+      letter-spacing: -0.052em;
+      font-weight: 740;
+    }
+
+    .lead {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .question {
+      min-height: 180px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-2px);
+      border-color: #b9c8c3;
+    }
+
+    .number {
+      color: var(--warm);
+      font-size: .78rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+    }
+
+    .question p {
+      margin: 28px 0 0;
+      font-size: 1.2rem;
+      font-weight: 630;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+    }
+
+    .statement {
+      margin-top: 24px;
+      padding: 28px;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 0 18px 18px 0;
+      font-size: 1.08rem;
+      color: #31403b;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .index-card,
+    .impact-card {
+      padding: clamp(28px, 4vw, 46px);
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .index-card h3,
+    .impact-card h3 {
+      margin-bottom: 14px;
+      font-size: 1.55rem;
+      letter-spacing: -0.035em;
+    }
+
+    .index-card p,
+    .impact-card p { color: var(--muted); }
+
+    .metric-list {
+      margin: 32px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .metric-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      font-size: .95rem;
+    }
+
+    .metric-list span:last-child {
+      color: var(--accent-dark);
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .impact-card {
+      background: var(--ink);
+      color: #f9f7ef;
+      border-color: var(--ink);
+    }
+
+    .impact-card p { color: #c8d0cc; }
+
+    .impact-card .mini-label {
+      display: inline-block;
+      margin-bottom: 54px;
+      color: #97b8af;
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .impact-quote {
+      max-width: 880px;
+      font-size: clamp(1.5rem, 3vw, 2.35rem);
+      line-height: 1.13;
+      letter-spacing: -0.045em;
+    }
+
+    .privacy-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .8fr);
+      gap: 54px;
+      align-items: start;
+    }
+
+    .privacy-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .privacy-point {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 17px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .check {
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
+      margin-top: 1px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .privacy-card {
+      padding: 28px;
+      border-radius: 24px;
+      background: var(--warm-soft);
+      border: 1px solid #ddc7aa;
+    }
+
+    .privacy-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.15rem;
+    }
+
+    .privacy-card p {
+      margin-bottom: 0;
+      color: #5f5142;
+    }
+
+    .role-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .role {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: #3f4a45;
+      font-size: .93rem;
+    }
+
+    .support {
+      display: grid;
+      grid-template-columns: .74fr 1.26fr;
+      gap: 58px;
+      align-items: center;
+    }
+
+    .support-logo {
+      min-height: 180px;
+      border: 1px dashed #bdb8ad;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.35);
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .qase-word {
+      display: block;
+      color: var(--ink);
+      font-size: 2.35rem;
+      font-weight: 780;
+      letter-spacing: -0.05em;
+    }
+
+    .logo-note {
+      display: block;
+      margin-top: 5px;
+      font-size: .75rem;
+    }
+
+    .authors {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .author {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--surface);
+    }
+
+    .author h3 {
+      margin-bottom: 5px;
+      font-size: 1.15rem;
+      letter-spacing: -0.025em;
+    }
+
+    .author p {
+      margin-bottom: 17px;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .text-link {
+      color: var(--accent-dark);
+      font-weight: 720;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1px;
+    }
+
+    .participate {
+      padding: 110px 0;
+    }
+
+    .cta-panel {
+      overflow: hidden;
+      position: relative;
+      padding: clamp(36px, 7vw, 76px);
+      border-radius: 34px;
+      background: var(--accent);
+      color: white;
+    }
+
+    .cta-panel::after {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      right: -150px;
+      bottom: -180px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 50px rgba(255,255,255,.025),
+        0 0 0 100px rgba(255,255,255,.018);
+    }
+
+    .cta-panel h2 {
+      max-width: 780px;
+      font-size: clamp(2.5rem, 5vw, 4.8rem);
+    }
+
+    .cta-panel p {
+      max-width: 760px;
+      color: #d9eeea;
+      font-size: 1.08rem;
+    }
+
+    .cta-panel .button {
+      position: relative;
+      z-index: 1;
+      margin-top: 18px;
+      background: #fff;
+      color: var(--accent-dark);
+      box-shadow: none;
+    }
+
+    .cta-panel .button:hover { background: #f4f1e8; }
+
+    footer {
+      padding: 32px 0 46px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a { text-underline-offset: 3px; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(18,107,96,.32);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links a:not(.button) { display: none; }
+      .hero { padding-top: 68px; }
+      .hero-grid,
+      .section-head,
+      .why-grid,
+      .privacy-layout,
+      .support {
+        grid-template-columns: 1fr;
+      }
+      .hero-grid { gap: 54px; }
+      .research-card { min-height: 460px; }
+      .section-head { gap: 14px; }
+      .support-logo { min-height: 150px; }
+    }
+
+    @media (max-width: 620px) {
+      .container { width: min(calc(100% - 28px), var(--max)); }
+      .site-header .button.small { display: none; }
+      .nav { min-height: 66px; }
+      h1 { font-size: clamp(3.05rem, 16vw, 4.4rem); }
+      .hero { padding: 54px 0 58px; }
+      .hero-actions { align-items: stretch; }
+      .hero-actions .button { width: 100%; }
+      .research-card { min-height: 410px; padding: 22px; }
+      .trust-visual { height: 260px; }
+      .node { width: 82px; height: 82px; font-size: .7rem; }
+      .section { padding: 68px 0; }
+      .question-grid,
+      .authors { grid-template-columns: 1fr; }
+      .question { min-height: 150px; }
+      .participate { padding: 76px 0; }
+      .cta-panel { border-radius: 26px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!--
+    SETUP BEFORE PUBLISHING
+    1) Replace YOUR_SURVEY_URL_HERE in the script near the bottom of this file.
+    2) Replace the two LinkedIn placeholder URLs.
+    3) Replace "20 minutes" below with your estimated completion time.
+    4) Optionally replace the Qase text placeholder with an official logo image.
+  -->
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="Economy of Trust home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Economy of Trust</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#study">The study</a>
+        <a href="#participate-info">Why participate</a>
+        <a href="#data">Your data</a>
+        <a class="button small survey-link" href="YOUR_SURVEY_URL_HERE">Participate</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Independent QA research</div>
+          <h1>What does low trust really cost a QA team?</h1>
+
+          <p class="hero-copy">
+            QA work depends on trust every day. QA engineers raise risks, report defects,
+            challenge assumptions, and help teams make better product decisions.
+            <strong>When trust is low, that work can become slower, more defensive, and more expensive.</strong>
+          </p>
+
+          <p class="hero-copy">
+            We’re researching how trust affects the way QA teams work: and whether the hidden
+            cost of low trust can actually be measured.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button survey-link" href="YOUR_SURVEY_URL_HERE">
+              Participate in the research
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a class="button secondary" href="#study">See what we’re studying</a>
+          </div>
+
+          <p class="hero-meta">
+            For QA leads, QA engineers, engineering managers, and software teams.
+            <strong>Takes approximately 20 minutes.</strong>
+          </p>
+        </div>
+
+        <aside class="research-card" aria-label="Research model illustration">
+          <div class="card-kicker">Trust is part of the system</div>
+
+          <div class="trust-visual" aria-hidden="true">
+            <div class="connector c1"></div>
+            <div class="connector c2"></div>
+            <div class="connector c3"></div>
+            <div class="connector c4"></div>
+            <div class="node dev">Developers</div>
+            <div class="node product">Product &amp;<br>leadership</div>
+            <div class="node qa">QA</div>
+            <div class="node process">Process &amp;<br>controls</div>
+            <div class="node ai">Automation<br>&amp; AI</div>
+          </div>
+
+          <p class="trust-caption">
+            <strong>Every quality decision is also a trust decision:</strong>
+            when to verify, when to delegate, when to escalate, and when evidence is enough.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section alt" id="study">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">What are we studying?</div>
+          <div>
+            <h2>How trust shows up in everyday quality work.</h2>
+            <p class="lead">
+              We’re looking for practical signals of trust and low trust and how does it impact
+              decision making, resolving issues, delegating responsibility, verifying quality,
+              adopting automation and AI, and deciding when evidence is enough.
+            </p>
+          </div>
+        </div>
+
+        <div class="question-grid">
+          <article class="question">
+            <span class="number">01</span>
+            <p>Do issues bounce between QA and development before they get resolved?</p>
+          </article>
+
+          <article class="question">
+            <span class="number">02</span>
+            <p>Does low trust lead to more rework or escaped defects?</p>
+          </article>
+
+          <article class="question">
+            <span class="number">03</span>
+            <p>Can this hidden friction: the “trust tax”: be measured using real team data?</p>
+          </article>
+        </div>
+
+        <div class="statement">
+          Our goal is to connect something that can feel abstract: <strong>trust</strong> -
+          with practical signals teams can recognize, discuss, and improve.
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="participate-info">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Why participate?</div>
+          <div>
+            <h2>Help turn hidden friction into something teams can work with.</h2>
+            <p class="lead">
+              Your contribution will help us develop a <strong>Trust Tax Index</strong>:
+              a practical way to understand the hidden cost of low trust in QA teams.
+            </p>
+          </div>
+        </div>
+
+        <div class="why-grid">
+          <article class="impact-card">
+            <span class="mini-label">Where the findings go</span>
+            <p class="impact-quote">
+              Shared with the QA and software engineering community through a research paper,
+              conference talks, and practical guidance for teams.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="data">
+      <div class="container privacy-layout">
+        <div>
+          <div class="section-label">Your data</div>
+          <h2 style="margin-top:18px;">We are studying teams, not scoring people.</h2>
+          <p class="lead">
+            The goal of this research is to understand how trust affects the way teams work.
+            Data will be analysed at the team level.
+          </p>
+
+          <div class="privacy-points">
+            <div class="privacy-point">
+              <span class="check" aria-hidden="true">✓</span>
+              <div>Individual names and personal performance data will not be published.</div>
+            </div>
+            <div class="privacy-point">
+              <span class="check" aria-hidden="true">✓</span>
+              <div>The research is designed to identify patterns in team systems and ways of working.</div>
+            </div>
+            <div class="privacy-point">
+              <span class="check" aria-hidden="true">✓</span>
+              <div>Participation helps us test whether “trust tax” can be connected to practical QA signals.</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="privacy-card">
+          <strong>Team-level perspective</strong>
+          <p>
+            We’re interested in patterns of coordination, decision-making, verification, accountability,
+            and quality work: not in ranking or evaluating individual team members.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="who">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Who can participate?</div>
+          <div>
+            <h2>People with first-hand experience of QA team dynamics.</h2>
+            <p class="lead">
+              We’d especially like to hear from people who see how QA and development teams work together,
+              how quality decisions are made, and where trust helps or slows the work.
+            </p>
+
+            <p style="margin-top:24px; color:var(--muted);">
+              Participants may work in startups, scale-ups, enterprises, software companies, agencies,
+              or technology teams inside non-software organizations.
+            </p>
+
+            <div class="role-cloud" aria-label="Participant roles">
+              <span class="role">QA Team Leads</span>
+              <span class="role">QA Engineers</span>
+              <span class="role">QA Managers</span>
+              <span class="role">Heads of QA</span>
+              <span class="role">Test Managers</span>
+              <span class="role">Quality Engineering Managers</span>
+              <span class="role">Directors of Quality Engineering</span>
+              <span class="role">Engineering Managers</span>
+              <span class="role">Engineering Leaders managing QA/testing</span>
+            </div>
+
+            <div style="margin-top:30px;">
+              <a class="button survey-link" href="YOUR_SURVEY_URL_HERE">
+                Take part in the research
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="researchers">
+      <div class="container support">
+        <div class="support-logo" aria-label="Research supported by Qase">
+          <div>
+            <span class="qase-word">Qase</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label">Research supported by Qase</div>
+          <h2 style="margin-top:18px;">Independent research, supported by industry.</h2>
+          <p class="lead">
+            This independent research is supported by Qase.
+          </p>
+
+          <div class="authors">
+            <article class="author">
+              <h3>Asya Isakova</h3>
+              <p>Organizational Psychologist</p>
+              <a class="text-link" href="YOUR_ASYA_LINKEDIN_URL" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            </article>
+
+            <article class="author">
+              <h3>Vitaly Sharovatov</h3>
+              <p>Developer Advocate</p>
+              <a class="text-link" href="YOUR_VITALY_LINKEDIN_URL" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="participate" id="participate">
+      <div class="container">
+        <div class="cta-panel">
+          <div class="section-label" style="color:#c6e7df;">Economy of Trust</div>
+          <h2>Help us uncover the hidden cost of low trust.</h2>
+          <p>
+            Better trust is not just about how work feels. It may affect how quickly teams resolve problems,
+            how much coordination work they create, and ultimately the quality of the software they ship.
+          </p>
+          <a class="button survey-link" href="YOUR_SURVEY_URL_HERE">
+            Participate in the research
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>© <span id="year"></span> Economy of Trust. Research on trust in QA teams.</div>
+      <div class="footer-links">
+        <a href="#data">Data &amp; privacy</a>
+        <a href="#researchers">Researchers</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /*
+      Replace this once with your live questionnaire URL.
+      Example: const SURVEY_URL = "https://tally.so/r/your-form";
+    */
+    const SURVEY_URL = "YOUR_SURVEY_URL_HERE";
+
+    document.querySelectorAll(".survey-link").forEach((link) => {
+      link.setAttribute("href", SURVEY_URL);
+
+      link.addEventListener("click", (event) => {
+        if (SURVEY_URL === "YOUR_SURVEY_URL_HERE") {
+          event.preventDefault();
+          alert("Add your questionnaire URL in the SURVEY_URL constant near the bottom of index.html.");
+        }
+      });
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
